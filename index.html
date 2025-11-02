@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>X Investment — Official</title>
+  <style>
+    :root{ --bg:#061026; --panel:#0c1624; --muted:#98a2b3; --accent:#2b8aef; --good:#16a34a; --bad:#ef4444; }
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#04122b 0%,#061026 60%);color:#e6eef6;padding:24px;}
+    .app{max-width:1100px;margin:0 auto}
+    header{display:flex;justify-content:space-between;align-items:center}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#2b8aef,#3b82f6);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:20px}
+    h1{margin:0;font-size:18px}
+    .lead{color:var(--muted);font-size:13px}
+    .top-actions{display:flex;gap:8px;align-items:center}
+    .btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#3b82f6);color:#fff}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .layout{display:grid;grid-template-columns:320px 1fr;gap:16px;margin-top:18px}
+    .card{background:var(--panel);border-radius:12px;padding:14px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+    .auth-block input, .input, .small-input{width:100%;padding:10px;margin-top:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    .muted{color:var(--muted);font-size:13px;margin-top:8px}
+    .tiny{font-size:12px;color:var(--muted)}
+    .profile-pic{width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:30px;background-size:cover;background-position:center}
+    .amounts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:12px}
+    .amount-card{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+    .tx-list{margin-top:12px}
+    .tx-item{display:flex;justify-content:space-between;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);margin-top:8px}
+    .hidden{display:none}
+    @media (max-width:900px){ .layout{grid-template-columns:1fr} }
+    .centered{display:flex;flex-direction:column;gap:12px;align-items:center}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">XI</div>
+        <div>
+          <h1>X Investment</h1>
+          <div class="lead">Official investment portal — KSH currency</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div id="miniAccount" style="display:flex;align-items:center;gap:10px;" class="hidden">
+          <div style="text-align:right;font-size:12px"><div id="miniName" style="font-weight:700">—</div><div class="tiny" id="miniPhone">—</div></div>
+        </div>
+        <button id="accountBtn" class="btn btn-ghost">Account</button>
+        <button id="signinBtn" class="btn btn-primary">Sign in / Sign up</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside>
+        <div class="card" id="authCard">
+          <div id="signupBlock" class="auth-block">
+            <h3>Create account</h3>
+            <input id="suName" placeholder="Full name" />
+            <input id="suPhone" placeholder="Phone (e.g. 0712345678)" />
+            <input id="suPassword" type="password" placeholder="Password" />
+            <input id="suConfirm" type="password" placeholder="Confirm password" />
+            <button id="suBtn" class="btn btn-primary">Sign up & Open account</button>
+            <div class="muted">Already have an account? <span style="color:var(--accent);cursor:pointer" id="showLogin">Login</span></div>
+            <div id="suMsg" class="muted"></div>
+          </div>
+
+          <div id="loginBlock" class="auth-block hidden">
+            <h3>Login</h3>
+            <input id="liPhone" placeholder="Phone" />
+            <input id="liPassword" type="password" placeholder="Password" />
+            <button id="liBtn" class="btn btn-primary">Login</button>
+            <div class="muted">Need an account? <span style="color:var(--accent);cursor:pointer" id="showSignup">Sign up</span></div>
+            <div id="liMsg" class="muted"></div>
+          </div>
+
+          <div id="profileBlock" class="hidden">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="profile-pic" id="profilePic">A</div>
+              <div>
+                <div id="pfName" style="font-weight:700">—</div>
+                <div class="tiny" id="pfPhone">—</div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <div class="tiny">Account Balance</div>
+              <div id="pfBalance" style="font-weight:700;font-size:18px">KSH 0</div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <label class="tiny">Upload profile picture</label>
+              <input id="picUpload" type="file" accept="image/*" />
+            </div>
+
+            <div style="margin-top:12px;display:flex;gap:8px;">
+              <button id="goToAccount" class="btn btn-ghost">View account actions</button>
+              <button id="doLogout" class="btn" style="background:var(--bad);color:white">Logout</button>
+            </div>
+
+            <div id="pfMsg" class="muted"></div>
+          </div>
+
+          <div id="accountActions" class="hidden" style="margin-top:12px">
+            <h3>Account</h3>
+            <div class="tiny">Deposit</div>
+            <div style="display:flex;gap:8px;margin-top:6px;">
+              <input id="depositAmount" class="small-input" placeholder="KSH amount" />
+              <button id="depositBtn" class="btn btn-primary">Deposit</button>
+            </div>
+
+            <div style="margin-top:12px;">
+              <div class="tiny">Withdraw</div>
+              <div style="display:flex;gap:8px;margin-top:6px;">
+                <input id="withdrawAmount" class="small-input" placeholder="KSH amount" />
+                <button id="withdrawBtn" class="btn" style="background:#ffb4b4">Withdraw</button>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <button id="logoutBtn" class="btn" style="background:var(--bad);color:white">Logout</button>
+            </div>
+
+            <div id="accMsg" class="muted" style="margin-top:10px"></div>
+          </div>
+
+        </div>
+      </aside>
+
+      <main>
+        <div class="card" id="welcomePanel">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-weight:700;font-size:16px;">Invest safely with X Investment</div>
+              <div class="tiny" style="margin-top:6px">Choose an amount and pay via mobile money. Minimum KSH 250. Investments credited with 10% bonus.</div>
+            </div>
+
+            <div style="text-align:right">
+              <div class="tiny">Logged in as</div>
+              <div id="mainUser" style="font-weight:700">—</div>
+              <div class="tiny" id="mainPhone">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="investmentPanel" style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-weight:700">Choose amount to invest</div>
+              <div class="tiny" style="margin-top:6px">Tap an amount to select it, then proceed to pay.</div>
+            </div>
+            <div>
+              <div class="tiny">Account</div>
+              <div id="miniBalance" style="font-weight:700">KSH 0</div>
+            </div>
+          </div>
+
+          <div class="amounts-grid" id="amountsGrid"></div>
+
+          <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+            <input id="customAmount" class="input" placeholder="Enter custom amount (>=250)" />
+            <button id="selectCustom" class="btn btn-primary">Select</button>
+          </div>
+
+          <div id="selectedCard" style="margin-top:12px" class="hidden">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div><strong id="selectedAmountText">KSH 0</strong><div class="tiny">10% bonus on credit</div></div>
+              <div><button id="proceedPay" class="btn btn-primary">Proceed to pay</button></div>
+            </div>
+          </div>
+
+          <div id="investMsg" class="muted" style="margin-top:12px"></div>
+
+          <div class="tx-list" id="txList" style="margin-top:14px"></div>
+        </div>
+
+        <div class="card hidden" id="paymentCard" style="margin-top:12px">
+          <div id="paymentFlow">
+            <div id="payStep1" class="centered">
+              <h3>Pay KSH <span id="payAmountText">0</span></h3>
+              <div class="tiny">Enter mobile number to receive payment prompt</div>
+              <input id="payPhone" class="input" placeholder="Mobile number (e.g. 2547XXXXXXXX)" />
+              <button id="startPayment" class="btn btn-primary">Start payment</button>
+              <div id="payMsg" class="muted"></div>
+            </div>
+
+            <div id="payStep2" class="centered hidden">
+              <h3>Waiting for payment</h3>
+              <div class="tiny">We've sent a payment request to the mobile number you entered. Please complete the payment on your phone.</div>
+              <div id="payStatus" style="font-weight:700;margin-top:8px">PENDING</div>
+              <div style="margin-top:8px"><button id="cancelPay" class="btn btn-ghost">Cancel</button></div>
+            </div>
+
+            <div id="payStep3" class="centered hidden">
+              <h3>Payment complete</h3>
+              <div class="tiny" id="payCompleteNote"></div>
+              <div style="margin-top:8px"><button id="doneBtn" class="btn btn-primary">Done</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="footerPanel" class="card hidden" style="margin-top:12px">
+          <div class="tiny muted">This implementation contains a local backend. For production you must integrate a live payment gateway and secure server configuration.</div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Simple frontend that talks to the Node backend in this package (same-origin)
+    const PRESETS = [250,500,1000,2000,5000,10000];
+    const enc = new TextEncoder(), dec = new TextDecoder();
+    // DOM refs
+    const suName = document.getElementById('suName'), suPhone = document.getElementById('suPhone'), suPassword = document.getElementById('suPassword'), suConfirm = document.getElementById('suConfirm'), suBtn = document.getElementById('suBtn'), suMsg = document.getElementById('suMsg');
+    const liPhone = document.getElementById('liPhone'), liPassword = document.getElementById('liPassword'), liBtn = document.getElementById('liBtn'), liMsg = document.getElementById('liMsg');
+    const signupBlock = document.getElementById('signupBlock'), loginBlock = document.getElementById('loginBlock'), profileBlock = document.getElementById('profileBlock'), accountActions = document.getElementById('accountActions');
+    const profilePicEl = document.getElementById('profilePic'), picUpload = document.getElementById('picUpload'), pfName = document.getElementById('pfName'), pfPhone = document.getElementById('pfPhone'), pfBalance = document.getElementById('pfBalance'), pfMsg = document.getElementById('pfMsg');
+    const amountsGrid = document.getElementById('amountsGrid'), customAmountEl = document.getElementById('customAmount'), selectCustom = document.getElementById('selectCustom'), selectedCard = document.getElementById('selectedCard'), selectedAmountText = document.getElementById('selectedAmountText'), proceedPay = document.getElementById('proceedPay'), investMsg = document.getElementById('investMsg'), txList = document.getElementById('txList');
+    const accountBtn = document.getElementById('accountBtn'), signinBtn = document.getElementById('signinBtn'), miniName = document.getElementById('miniName'), miniPhone = document.getElementById('miniPhone'), miniAccount = document.getElementById('miniAccount'), goToAccount = document.getElementById('goToAccount'), doLogout = document.getElementById('doLogout'), showLoginBtn = document.getElementById('showLogin'), showSignupBtn = document.getElementById('showSignup');
+    const depositAmountEl = document.getElementById('depositAmount'), withdrawAmountEl = document.getElementById('withdrawAmount'), depositBtn = document.getElementById('depositBtn'), withdrawBtn = document.getElementById('withdrawBtn'), logoutBtn = document.getElementById('logoutBtn'), accMsg = document.getElementById('accMsg');
+    const paymentCard = document.getElementById('paymentCard'), payAmountText = document.getElementById('payAmountText'), payPhone = document.getElementById('payPhone'), startPayment = document.getElementById('startPayment'), payMsg = document.getElementById('payMsg'), payStep1 = document.getElementById('payStep1'), payStep2 = document.getElementById('payStep2'), payStep3 = document.getElementById('payStep3'), payStatus = document.getElementById('payStatus'), cancelPay = document.getElementById('cancelPay'), doneBtn = document.getElementById('doneBtn'), payCompleteNote = document.getElementById('payCompleteNote');
+    let current = null, selectedAmount = 0, currentPaymentId = null, pollInterval = null;
+
+    function createAmountCard(amount){
+      const el = document.createElement('div');
+      el.className = 'amount-card';
+      el.innerHTML = `<div><div class="tiny">Invest</div><strong>KSH ${Number(amount).toLocaleString()}</strong></div><div class="tiny muted">+10% bonus at credit</div>`;
+      el.addEventListener('click', ()=> selectAmount(amount));
+      return el;
+    }
+    function populateAmounts(){ amountsGrid.innerHTML=''; for(const a of PRESETS) amountsGrid.appendChild(createAmountCard(a)); }
+
+    function selectAmount(a){ selectedAmount = a; selectedAmountText.textContent = `KSH ${Number(a).toLocaleString()}`; selectedCard.classList.remove('hidden'); }
+    selectCustom.addEventListener('click', ()=>{ const n = Number(customAmountEl.value); if(!n || n<250){ investMsg.textContent='Enter at least KSH 250'; return; } selectAmount(n); investMsg.textContent=''; });
+
+    function show(el){ el.classList.remove('hidden'); }
+    function hide(el){ el.classList.add('hidden'); }
+
+    function setCurrent(user){ current = user; if(user){ profileBlock.classList.remove('hidden'); signupBlock.classList.add('hidden'); loginBlock.classList.add('hidden'); accountBtn.textContent='Account'; miniAccount.classList.remove('hidden'); miniName.textContent = user.name; miniPhone.textContent = user.phone; document.getElementById('mainUser').textContent = user.name; document.getElementById('mainPhone').textContent = user.phone; fetchProfile(); } else { profileBlock.classList.add('hidden'); accountActions.classList.add('hidden'); signupBlock.classList.remove('hidden'); miniAccount.classList.add('hidden'); document.getElementById('mainUser').textContent = '—'; document.getElementById('mainPhone').textContent = '—'; } }
+
+    async function api(path, method='GET', body=null){ const opts = { method, headers: { 'Content-Type':'application/json' } }; if(body) opts.body = JSON.stringify(body); const res = await fetch('/api'+path, opts); const j = await res.json(); return { ok: res.ok, status: res.status, data: j }; }
+
+    suBtn.addEventListener('click', async ()=>{ suMsg.textContent=''; const name = suName.value.trim(); const phone = suPhone.value.trim(); const pass = suPassword.value; const conf = suConfirm.value; if(!name||!phone||!pass||!conf){ suMsg.textContent='Please fill all fields'; return; } if(pass !== conf){ suMsg.textContent='Passwords do not match'; return; } const r = await api('/signup','POST',{ name, phone, password: pass }); if(!r.ok){ suMsg.textContent = r.data?.error || 'Signup failed'; return; } setCurrent({ name, phone, token: r.data.token }); suMsg.textContent = 'Account created'; populateAmounts(); show(document.getElementById('investmentPanel')); show(document.getElementById('footerPanel')); });
+
+    liBtn?.addEventListener('click', async ()=>{ liMsg.textContent=''; const phone = liPhone.value.trim(); const pass = liPassword.value; if(!phone||!pass){ liMsg.textContent='Enter phone and password'; return; } const r = await api('/login','POST',{ phone, password: pass }); if(!r.ok){ liMsg.textContent = r.data?.error || 'Login failed'; return; } setCurrent({ name: r.data.user.name, phone: r.data.user.phone, token: r.data.token }); liMsg.textContent=''; });
+
+    async function fetchProfile(){ if(!current) return; const r = await api(`/user/${encodeURIComponent(current.phone)}`); if(r.ok){ const u = r.data.user; pfName.textContent = u.name; pfPhone.textContent = u.phone; pfBalance.textContent = 'KSH ' + Number(u.balance||0).toLocaleString(); document.getElementById('miniBalance').textContent = 'KSH ' + Number(u.balance||0).toLocaleString(); renderTxs(u.txs||[]); if(u.picture){ profilePicEl.style.backgroundImage = `url(${u.picture})`; profilePicEl.textContent=''; } } }
+
+    function renderTxs(txs){ txList.innerHTML=''; if(!txs || txs.length===0){ txList.innerHTML='<div class=\"tiny muted\">No transactions yet</div>'; return; } for(const t of txs.slice().reverse()){ const d = document.createElement('div'); d.className = 'tx-item'; const side = (t.type==='withdraw' ? `<div class=\"red\">- KSH ${Number(t.amount).toLocaleString()}</div>` : `<div class=\"green\">+ KSH ${Number(t.amount).toLocaleString()}</div>`); d.innerHTML = `<div><div style=\"font-weight:700\">${t.type.toUpperCase()}</div><div class=\"tiny\">${new Date(t.createdAt).toLocaleString()}</div><div class=\"tiny muted\">${t.meta?.note||''}</div></div><div>${side}</div>`; txList.appendChild(d); } }
+
+    picUpload.addEventListener('change', async (e)=>{ if(!current) return; const f = e.target.files[0]; if(!f) return; if(f.size > 2 * 1024 * 1024){ pfMsg.textContent = 'Image must be <= 2MB'; return; } const reader = new FileReader(); reader.onload = async ()=>{ const dataUrl = reader.result; const r = await api('/user/picture','POST',{ phone: current.phone, picture: dataUrl }); if(r.ok){ pfMsg.textContent = 'Picture uploaded'; fetchProfile(); } else { pfMsg.textContent = r.data?.error || 'Upload failed'; } }; reader.readAsDataURL(f); });
+
+    accountBtn.addEventListener('click', ()=>{ if(!current){ signupBlock.classList.remove('hidden'); loginBlock.classList.add('hidden'); profileBlock.classList.add('hidden'); return; } accountActions.classList.toggle('hidden'); profileBlock.classList.remove('hidden'); });
+    signinBtn.addEventListener('click', ()=>{ signupBlock.classList.remove('hidden'); loginBlock.classList.add('hidden'); profileBlock.classList.add('hidden'); });
+    showLoginBtn.addEventListener('click', ()=>{ signupBlock.classList.add('hidden'); loginBlock.classList.remove('hidden'); });
+    showSignupBtn.addEventListener('click', ()=>{ signupBlock.classList.remove('hidden'); loginBlock.classList.add('hidden'); });
+
+    doLogout.addEventListener('click', async ()=>{ await api('/logout','POST',{ phone: current.phone }); setCurrent(null); });
+    logoutBtn.addEventListener('click', async ()=>{ await api('/logout','POST',{ phone: current.phone }); setCurrent(null); });
+
+    goToAccount.addEventListener('click', ()=>{ accountActions.classList.remove('hidden'); });
+
+    depositBtn.addEventListener('click', async ()=>{ if(!current){ accMsg.textContent='Login first'; return; } const v = Number(depositAmountEl.value); if(!v||v<=0){ accMsg.textContent='Enter amount'; return; } const r = await api('/deposit','POST',{ phone: current.phone, amount: v }); if(!r.ok){ accMsg.textContent = r.data?.error || 'Deposit failed'; return; } accMsg.textContent = 'Deposit successful'; depositAmountEl.value=''; fetchProfile(); });
+    withdrawBtn.addEventListener('click', async ()=>{ if(!current){ accMsg.textContent='Login first'; return; } const v = Number(withdrawAmountEl.value); if(!v||v<=0){ accMsg.textContent='Enter amount'; return; } const r = await api('/withdraw','POST',{ phone: current.phone, amount: v }); if(!r.ok){ accMsg.textContent = r.data?.error || 'Withdraw failed'; return; } accMsg.textContent = 'Withdraw successful'; withdrawAmountEl.value=''; fetchProfile(); });
+
+    proceedPay.addEventListener('click', ()=>{ if(!current){ investMsg.textContent='Please login first'; return; } paymentCard.classList.remove('hidden'); payStep1.classList.remove('hidden'); payStep2.classList.add('hidden'); payStep3.classList.add('hidden'); payAmountText.textContent = selectedAmount; payPhone.value=''; payMsg.textContent=''; window.scrollTo({ top: paymentCard.offsetTop - 20, behavior: 'smooth' }); });
+
+    startPayment.addEventListener('click', async ()=>{ payMsg.textContent=''; const phone = payPhone.value.trim(); if(!phone){ payMsg.textContent='Enter mobile number'; return; } const r = await api('/payment/create','POST',{ phone: current.phone, amount: selectedAmount, payTo: phone }); if(!r.ok){ payMsg.textContent = r.data?.error || 'Payment init failed'; return; } currentPaymentId = r.data.paymentId; payStep1.classList.add('hidden'); payStep2.classList.remove('hidden'); payStatus.textContent = 'PENDING'; pollPaymentStatus(currentPaymentId); });
+
+    cancelPay.addEventListener('click', async ()=>{ if(currentPaymentId){ await api(`/payment/cancel/${currentPaymentId}`,'POST'); stopPolling(); payStep2.classList.add('hidden'); payStep1.classList.remove('hidden'); } });
+
+    doneBtn.addEventListener('click', ()=>{ paymentCard.classList.add('hidden'); selectedCard.classList.add('hidden'); selectedAmount = 0; fetchProfile(); });
+
+    function stopPolling(){ if(pollInterval){ clearInterval(pollInterval); pollInterval = null; } }
+    async function pollPaymentStatus(paymentId){ stopPolling(); pollInterval = setInterval(async ()=>{ const r = await api(`/payment/status/${paymentId}`); if(!r.ok){ console.warn('poll error'); return; } const st = r.data.status; payStatus.textContent = st; if(st === 'SUCCESS'){ stopPolling(); payStep2.classList.add('hidden'); payStep3.classList.remove('hidden'); payCompleteNote.textContent = r.data.note || 'Investment credited.'; fetchProfile(); } if(st === 'FAILED' || st === 'CANCELLED'){ stopPolling(); payStep2.classList.add('hidden'); payStep1.classList.remove('hidden'); payMsg.textContent = 'Payment failed or cancelled'; } }, 2500); }
+
+    function init(){ populateAmounts(); }
+    init();
+  </script>
+</body>
+</html>
